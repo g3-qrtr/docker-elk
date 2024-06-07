@@ -38,7 +38,7 @@ services:
       MONITORING_INTERNAL_PASSWORD: ${MONITORING_INTERNAL_PASSWORD:-}
       BEATS_SYSTEM_PASSWORD: ${BEATS_SYSTEM_PASSWORD:-}
     networks:
-      - elk
+      - local-network
     depends_on:
       - elasticsearch
 
@@ -64,7 +64,7 @@ services:
       # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
       discovery.type: single-node
     networks:
-      - elk
+      - local-network
     restart: unless-stopped
 
   logstash:
@@ -86,7 +86,7 @@ services:
       LS_JAVA_OPTS: -Xms256m -Xmx256m
       LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD:-}
     networks:
-      - elk
+      - local-network
     depends_on:
       - elasticsearch
     restart: unless-stopped
@@ -103,14 +103,14 @@ services:
     environment:
       KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
     networks:
-      - elk
+      - local-network
     depends_on:
       - elasticsearch
     restart: unless-stopped
 
 networks:
-  elk:
-    driver: bridge
+  local-network:
+    external: true
 
 volumes:
   elasticsearch:
